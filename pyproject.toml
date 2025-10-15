@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "project1-tkachenko-sonya-b25-555"
+version = "0.1.0"
+description = ""
+authors = ["Sonya Tkachenko <sonyatkachenko2003@mail.ru>"]
+readme = "README.md"
+packages = [
+    { include = "labyrinth_game" },
+]
+
+[tool.poetry.scripts]
+project = "labyrinth_game.main:main"
+ 
+[tool.poetry.dependencies]
+python = ">=3.12"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
