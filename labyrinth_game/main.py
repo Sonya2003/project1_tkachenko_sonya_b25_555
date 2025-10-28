@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from constants import ROOMS
-from utils import describe_current_room
+from utils import describe_current_room, solve_puzzle
 from player_actions import show_inventory, get_input, move_player, take_item, use_item
 
 
@@ -21,7 +21,7 @@ def process_command(game_state, command):
 
     action = parts[0]
 
-    mach action:
+    match action:
 
         case "look":
             describe_current_room(game_state)
@@ -37,16 +37,16 @@ def process_command(game_state, command):
 
             if len(parts) > 1:
                 direction = parts[1]
-            move_player(game_state, direction)
+                move_player(game_state, direction)
             else:
                 print("Укажите направление: go north/south/east/west")
 
         case "take":
             if len(parts) > 1:
                item_name = parts[1] 
-            take_item(game_state, item_name)
+               take_item(game_state, item_name)
             else:
-               print("Укажите предмет.")
+                print("Укажите предмет.")
         
         case "inventory":
             show_inventory(game_state)
@@ -54,6 +54,9 @@ def process_command(game_state, command):
         case "quit" | "exit":
             game_state['game_over'] = True
             print("Игра окончена.")
+
+        case "solve":
+            solve_puzzle(game_state)
 
 
 def main():
