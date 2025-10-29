@@ -64,7 +64,8 @@ def main():
     describe_current_room(game_state)
     while not game_state['game_over']:
         command = input("\nВведите команду: ")
-    process_command(game_state, command)
+    
+        process_command(game_state, command)
 
 if __name__ == "__main__":
     main()

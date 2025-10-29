@@ -1,20 +1,23 @@
+from constants import ROOMS
+
 def show_inventory(game_state):
     inventory = game_state['player_inventory']
     if inventory:
-        print("Ваш инвентарь:", ",".join(inventory).)
+        print("Ваш инвентарь:", ",".join(inventory))
     else:
         print("Ваш инвентарь пуст.")
 
 def get_input(prompt="> "):
     try:
-    user_input = input(prompt)
-    return user_input.strip().lower()    
+        user_input = input(prompt)
+        return user_input.strip().lower()    
 
     except (KeyboardInterrupt, EOFError):
         print("\nВыход из игры.")
         return "quit"
 
 def move_player(game_state, direction):
+    from utils import describe_current_room
     current_room_name = game_state["current_room"]
     current_room = ROOMS[current_room_name]
 

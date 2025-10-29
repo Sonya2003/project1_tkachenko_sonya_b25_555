@@ -1,10 +1,11 @@
 from constants import ROOMS
 from player_actions import get_input
 
+
 def describe_current_room(game_state):
     current_room_name = game_state['current_room']
     room = ROOMS[current_room_name]
-    
+
     print(f"\n== {current_room_name.upper()} ==")
     print(room['description'])
     if room['items']:
@@ -12,6 +13,7 @@ def describe_current_room(game_state):
     print("Выходы:", ",".join(room['exits'].keys()))
     if room['puzzle']:
         print("Кажется, здесь есть загадка (используйте команду solve).")
+
 
 def attempt_open_treasure(game_state):
     current_room_name = game_state["current_room"]
@@ -22,7 +24,7 @@ def attempt_open_treasure(game_state):
         if 'treasure_chest' in room["items"]:
             room["items"].remove('treasure_chest')
         print("В сундуке сокровище! Вы победили!")
-        
+
         game_state["game_over"] = True
         return
     else:
@@ -40,8 +42,9 @@ def attempt_open_treasure(game_state):
                     print("В сундуке сокровище! Вы победили!")
                 else:
                     print("Неверный код. Сундук остается запертым.")
-         else:
-             print("Вы отступаете от сундука.")    
+        else:
+            print("Вы отступаете от сундука.")
+
 
 def solve_puzzle(game_state):
     current_room_name = game_state['current_room']
@@ -49,11 +52,11 @@ def solve_puzzle(game_state):
 
     if current_room_name == 'treasure_room':
         attempt_open_treasure(game_state)
-        return 
+        return
 
     if not room['puzzle']:
         print("Загадок здесь нет.")
-        return 
+        return
 
     question, correct_answer = room["puzzle"]
     print(f"Загадка: {question}")
@@ -64,9 +67,10 @@ def solve_puzzle(game_state):
         print("Загадка решена.")
         room["puzzle"] = None
         game_state["player_inventory"].append("gold_doubloon")
-	print("Вы получили награду: золотой дублон!")
+        print("Вы получили награду: золотой дублон!")
     else:
         print("Неверно. Попробуйте снова.")
+
 
 def show_help():
     print("\nДоступные команды:")
