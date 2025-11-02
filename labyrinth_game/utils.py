@@ -1,18 +1,20 @@
 import math
+
+from const import COMMANDS
 from constants import ROOMS
 from player_actions import get_input
-from const import COMMANDS
+
 
 def describe_current_room(game_state):
-    current_room_name = game_state['current_room']
+    current_room_name = game_state["current_room"]
     room = ROOMS[current_room_name]
 
     print(f"\n== {current_room_name.upper()} ==")
-    print(room['description'])
-    if room['items']:
-        print("Заметные предметы:", ",".join(room['items']))
-    print("Выходы:", ",".join(room['exits'].keys()))
-    if room['puzzle']:
+    print(room["description"])
+    if room["items"]:
+        print("Заметные предметы:", ",".join(room["items"]))
+    print("Выходы:", ",".join(room["exits"].keys()))
+    if room["puzzle"]:
         print("Кажется, здесь есть загадка (используйте команду solve).")
 
 
@@ -20,10 +22,10 @@ def attempt_open_treasure(game_state):
     current_room_name = game_state["current_room"]
     room = ROOMS[current_room_name]
 
-    if 'treasure_key' in game_state["player_inventory"]:
+    if "treasure_key" in game_state["player_inventory"]:
         print("Вы применяете ключ, и замок щёлкает. Сундук открыт!")
-        if 'treasure_chest' in room["items"]:
-            room["items"].remove('treasure_chest')
+        if "treasure_chest" in room["items"]:
+            room["items"].remove("treasure_chest")
         print("В сундуке сокровище! Вы победили!")
 
         game_state["game_over"] = True
@@ -38,8 +40,8 @@ def attempt_open_treasure(game_state):
                 user_code = get_input("Введите код: ")
                 if user_code.lower() == correct_answer:
                     print("Код верный! Замок щёлкает, и сундук открывается.")
-                    if 'treasure_chest' in room["items"]:
-                        room["items"].remove('treasure_chest')
+                    if "treasure_chest" in room["items"]:
+                        room["items"].remove("treasure_chest")
                     print("В сундуке сокровище! Вы победили!")
                 else:
                     print("Неверный код. Сундук остается запертым.")
@@ -48,14 +50,14 @@ def attempt_open_treasure(game_state):
 
 
 def solve_puzzle(game_state):
-    current_room_name = game_state['current_room']
+    current_room_name = game_state["current_room"]
     room = ROOMS[current_room_name]
 
-    if current_room_name == 'treasure_room':
+    if current_room_name == "treasure_room":
         attempt_open_treasure(game_state)
         return
 
-    if not room['puzzle']:
+    if not room["puzzle"]:
         print("Загадок здесь нет.")
         return
 
@@ -63,10 +65,7 @@ def solve_puzzle(game_state):
     print(f"Загадка: {question}")
 
     user_answer = get_input("Ваш ответ: ").strip().lower()
-    number_words = {
-    "10": ["10", "десять"],
-    "22": ["22", "двадцать два"]
-    }
+    number_words = {"10": ["10", "десять"], "22": ["22", "двадцать два"]}
     acceptable_answers = number_words.get(correct_answer, [correct_answer.lower()])
     if user_answer in acceptable_answers:
         print("Загадка решена.")
@@ -79,46 +78,53 @@ def solve_puzzle(game_state):
             print("Неверный ответ. Ловушка активирована.")
             trigger_trap(game_state)
 
+
 def pseudo_random(seed, modulo):
-    x = math.sin(seed*12.9898) * 43758.5453
-    x1 = x - math.floor(x)    
-    return int(x1*modulo)
-    
+    x = math.sin(seed * 12.9898) * 43758.5453
+    x1 = x - math.floor(x)
+    return int(x1 * modulo)
+
+
 def trigger_trap(game_state):
     print("Ловушка активирована! Пол стал дрожать...")
-    inventory = game_state['player_inventory']
+    inventory = game_state["player_inventory"]
     if inventory:
         modulo = len(inventory)
-        random_index = pseudo_random(game_state['steps_taken'], modulo) % modulo
+        random_index = pseudo_random(game_state["steps_taken"], modulo) % modulo
         lost_item = inventory.pop(random_index)
         print(f"Вы потеряли предмет: {lost_item}")
     else:
-        random_value = pseudo_random(game_state['steps_taken'], 10)
+        random_value = pseudo_random(game_state["steps_taken"], 10)
         if random_value < 3:
             print("Вас настигла ловушка! Игра окончена.")
-            game_state['game_over'] = True
+            game_state["game_over"] = True
         else:
             print("Вам удалось увернуться от ловушки! Вы уцелели.")
 
+
 def random_event(game_state):
-    if pseudo_random(game_state['steps_taken'], 10) == 0:
-        event_type = pseudo_random(game_state['steps_taken'] + 1, 3)
+    if pseudo_random(game_state["steps_taken"], 10) == 0:
+        event_type = pseudo_random(game_state["steps_taken"] + 1, 3)
         if event_type == 0:
             print("Вы нашли монету.")
-            current_room = game_state['current_room'] 
-            game_state['current_room'][current_room]['items'].append('coin')
+            current_room = game_state["current_room"]
+            game_state["current_room"][current_room]["items"].append("coin")
         if event_type == 1:
             print("Вы слышите шорох.")
-            if 'sword' in game_state['player_inventory']:
+            if "sword" in game_state["player_inventory"]:
                 print("У вас есть меч. Вы отпугнули существо.")
             else:
                 print("Вы наткнулись на страшное существо.")
         if event_type == 2:
-            if game_state['current_room'] == 'trap_room' and 'torch' not in game_state['inventory']:
+            if (
+                game_state["current_room"] == "trap_room"
+                and "torch" not in game_state["inventory"]
+            ):
                 print("Вы в опасности!")
                 trigger_trap(game_state)
             else:
                 print("Вам удалось избежать попадания в ловушку.")
+
 
 def show_help():
     print("\nДоступные команды:")
