@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from constants import ROOMS
-from utils import describe_current_room, solve_puzzle
+from utils import describe_current_room, solve_puzzle, show_help, attempt_open_treasure
 from player_actions import show_inventory, get_input, move_player, take_item, use_item
 
 
@@ -20,6 +20,11 @@ def process_command(game_state, command):
         return
 
     action = parts[0]
+
+    directions = ["north", "south", "east", "west"]
+    if action in directions:
+        move_player(game_state, action)
+        return
 
     match action:
 
@@ -56,8 +61,13 @@ def process_command(game_state, command):
             print("Игра окончена.")
 
         case "solve":
-            solve_puzzle(game_state)
+            if game_state["current_room"] == "treasure_room":
+                attempt_open_treasure(game_state)
+            else:
+                solve_puzzle(game_state)
 
+        case "help":
+            show_help()
 
 def main():
     print("Добро пожаловать в Лабиринт сокровищ!")

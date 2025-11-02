@@ -17,14 +17,25 @@ def get_input(prompt="> "):
         return "quit"
 
 def move_player(game_state, direction):
-    from utils import describe_current_room
+    from utils import describe_current_room, random_event
     current_room_name = game_state["current_room"]
     current_room = ROOMS[current_room_name]
-
     if direction in current_room["exits"]:
-        game_state["current_room"] = current_room["exits"][direction]
-        game_state["steps_taken"] += 1
-        describe_current_room(game_state)
+        next_room = current_room["exits"][direction]
+        if next_room == 'treasure_room':
+            if 'rusty_key' in game_state['player_inventory']:
+                print("Вы используете найденный ключ, чтобы открыть путь в комнату сокровищ.")
+                game_state["current_room"] = current_room["exits"][direction]               
+                game_state["steps_taken"] += 1 
+                describe_current_room(game_state)
+                random_event(game_state)
+            else:
+                print("Дверь заперта. Нужен ключ, чтобы пройти дальше.")
+        else:
+            game_state["current_room"] = current_room["exits"][direction] 
+            game_state["steps_taken"] += 1
+            describe_current_room(game_state)
+            random_event(game_state)
     else:
         print("Нельзя пойти в этом направлении.")
 
