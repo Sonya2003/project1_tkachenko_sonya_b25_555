@@ -43,6 +43,7 @@ def attempt_open_treasure(game_state):
                     if "treasure_chest" in room["items"]:
                         room["items"].remove("treasure_chest")
                     print("В сундуке сокровище! Вы победили!")
+                    game_state["game_over"] = True
                 else:
                     print("Неверный код. Сундук остается запертым.")
         else:
@@ -70,10 +71,14 @@ def solve_puzzle(game_state):
     if user_answer in acceptable_answers:
         print("Загадка решена.")
         room["puzzle"] = None
-        game_state["player_inventory"].append("gold_doubloon")
-        print("Вы получили награду: золотой дублон!")
+        if current_room_name == "library":
+            game_state["player_inventory"].append("treasure_key")
+            print("Вы получили награду: ключ от сокровищницы!")
+        else:
+            game_state["player_inventory"].append("gold_doubloon")
+            print("Вы получили награду: золотой дублон!")
     else:
-        print("Неверно. Попробуйте снова.")
+        print("Неверно.")
         if current_room_name == "trap_room":
             print("Неверный ответ. Ловушка активирована.")
             trigger_trap(game_state)

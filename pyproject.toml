@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "project1-tkachenko-sonya-b25-555"
 version = "0.1.0"
-description = ""
+description = "Текстовая приключенческая игра-лабиринт с загадками и сокровищами"
 authors = ["Sonya Tkachenko <sonyatkachenko2003@mail.ru>"]
 readme = "README.md"
 packages = [
@@ -13,7 +13,22 @@ project = "labyrinth_game.main:main"
  
 [tool.poetry.dependencies]
 python = ">=3.12"
+asciinema = "^2.4.0"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+exclude = ["venv", ".venv", "dist", "__pycache__"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = []
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "ruff (>=0.14.0,<0.15.0)"
+]
